@@ -118,7 +118,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 - `customers.csv` : 고객 정보
 
-    | 컬럼명                          | 의미(정확한 정의)            | 값 형태         |
+    | 컬럼명                          | 설명           | 값 형태         |
     | ----------------------------  | --------------------- | ------------ |
     | customer_id                     | 고객 고유 식별자             | string       |
     | FN                              | 패션 뉴스/마케팅 메시지 수신 여부   | 1 / NaN      |
@@ -133,8 +133,8 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 - `transactions_train.csv` : 거래 정보
 
-    | 컬럼명                          | 구분     | 의미(정확한 정의)            | 값 형태         |
-    | ---------------------------- | ------ | --------------------- | ------------ |
+    | 컬럼명                         | 설명           | 값 형태         |
+    | ---------------------------- | --------------------- | ------------ |
     | customer_id                     | 고객 고유 식별자             | string       |
     | t_dat                           | 구매 발생 날짜              | date         |
     | article_id                      | 구매된 상품의 고유 ID         | integer      |
@@ -187,12 +187,8 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
     - $$Churn =\begin{cases}1 & \text{if } API < LPL \\0 & \text{otherwise}\end{cases}$$
 
-    | 지표명 | 산출 로직 | 분석적 의미 |
-    | --- | --- | --- |
-    | **API ratio** | `gap 합계` / (`거래일수` - 1) | 고객별 **평균 구매 주기** (구매 간격의 평균) |
-    | **LPL** | `last_date` - `최종 구매 시점` | 고객별 최종 구매 시점부터 데이터의 마지막 날짜까지 경과한 기간|
-    | **이탈여부(churn)** | `API ratio < LPL` | LPL 값이 API 값보다 큰 경우 이탈로 정의 |
-    
+- **종속변수(y) - 신규고객이탈 / 전체고객이탈**
+  
     - **신규고객이탈** : 거래 횟수가 정확히 1회인 고객의 이탈 여부 (이탈:1/비이탈:0)
     - **전체고객이탈** : 모든 고객의 이탈 여부
 ---
@@ -214,10 +210,12 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
   - bag는 신규 고객에서 이탈이 가장 많이 생겼지만 전체 고객으로 봤을 때 이탈순위에서 상대적으로 떨어짐
 
 <br>
+
 <img src='./img/eda_age.png'>
   - 10~20대 이탈률이 상대적으로 많이 높음
 
 <br>
+
 <img src='./img/eda_member.png'>
   - 비멤버십 고객 이탈률이 매우 높음
   - 고객을 멤버십으로 전환시키는 전략이 필요할 것으로 보임
@@ -245,8 +243,9 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
   - 이탈 예측의 정확도와 실무 활용도를 고려하여 **신규 고객**과 **전체 고객** 모델 모두 **LightGBM**을 최종 모델로 선정함
 
-<img src='./img/model/신규고객이탈 ROC.png' width=400>
-<img src='./img/model/전체고객이탈 ROC.png' width=400>
+| 신규 고객 이탈 ROC | 전체 고객 이탈 ROC |
+|:--:|:--:|
+| <img src='./img/model/신규고객이탈 ROC.png' width=400> | <img src='./img/model/전체고객이탈 ROC.png' width=400> |
 
 ### 1️⃣ 신규 고객 이탈 예측 모델: LightGBM 선정
   - 신규 고객군에서는 LightGBM이 타 알고리즘 대비 가장 압도적인 변별력을 보여줌
@@ -270,8 +269,10 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 ### 6.2.2 Faker 예측 결과
 
 ### 1. 주요 컬럼 설명
-<img src='./img/faker1.png' width=500>
-<img src='./img/faker.png' width=500>
+
+| 코드 | 결과 |
+|:--:|:--:|
+|<img src='./img/faker1.png' width=500>|<img src='./img/faker.png' width=500>|
 
 | 컬럼명 | 설명 | 비고 |
 | :--- | :--- | :--- |
@@ -306,9 +307,11 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ### 7.1 이용자 이탈 방지 전략
 
+| 신규 고객 이탈 결과 | 전체 고객 이탈 결과 |
+|:--:|:--:|
+|<img src='./img/model/신규고객이탈_feature importances bar graph.png' width=400>|<img src='./img/model/전체고객이탈_feature importances bar graph.png' width=400>|
 
-<img src='./img/model/신규고객이탈_feature importances bar graph.png' width=400>
-<img src='./img/model/전체고객이탈_feature importances bar graph.png' width=400>
+
 
 ### 💰 1. 가격 (Price)
 > **핵심 가치**: 구매 금액과 직접 연결된 행동 지표로, 특히 **고가치(High-Value) 고객**의 이탈을 방지하는 핵심 데이터임
