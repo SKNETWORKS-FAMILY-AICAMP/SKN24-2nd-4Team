@@ -73,7 +73,7 @@
 | **분류**| **기술/도구** |
 |---|---|
 | **언어** | ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=yellow)     |
-| **라이브러리** | ![NumPy](https://img.shields.io/badge/numpy-013243?style=for-the-badge&logo=numpy) ![Pandas](https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas) ![Matplotlib](https://img.shields.io/badge/Matplotlib-ffffff?style=for-the-badge&logo=Matplotlib) <br> ![Seaborn](https://img.shields.io/badge/seaborn-0C5A5A?style=for-the-badge&logo=Seaborn) ![scikitlearn](https://img.shields.io/badge/scikitlearn-green?style=for-the-badge&logo=scikitlearnlogo=xgboost) ![imbalanced-learn](https://img.shields.io/badge/imbalanced--learn-FF6B6B?style=for-the-badge) ![Joblib](https://img.shields.io/badge/Joblib-2E8B57?style=for-the-badge)
+| **라이브러리** | ![NumPy](https://img.shields.io/badge/numpy-013243?style=for-the-badge&logo=numpy) ![Pandas](https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas) ![Matplotlib](https://img.shields.io/badge/Matplotlib-ffffff?style=for-the-badge&logo=Matplotlib) <br> ![Seaborn](https://img.shields.io/badge/seaborn-0C5A5A?style=for-the-badge&logo=Seaborn) ![scikitlearn](https://img.shields.io/badge/scikitlearn-green?style=for-the-badge&logo=scikitlearnlogo=xgboost) ![Joblib](https://img.shields.io/badge/Joblib-2E8B57?style=for-the-badge)
 | **협업 툴** | ![GitHub](https://img.shields.io/badge/github-121011?style=for-the-badge&logo=github) ![Git](https://img.shields.io/badge/git-F05033?style=for-the-badge&logo=git&logoColor=white) ![Notion](https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion) ![Discord](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)|
 
 ---
@@ -112,7 +112,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
     | 이탈 기준    | 계약 해지     | 일정 기간 비활성       |
     | 정의 난이도   | 비교적 명확    | 도메인별 정의 필요      |
     | 주요 변수    | 해지일, 약정기간 | 마지막 활동일, 재구매 주기 |
-    | 적용 산업 예시|통신, 은행, 보험 등| 이커머스, 온라인 게임 등
+    | 적용 산업 예시|통신, 은행, 보험 등| 이커머스, 온라인 게임 등|
 
 
 ---
@@ -121,14 +121,14 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ### 5.1 데이터 병합 (Data Integration)
 
-- `articles.csv`
+- `articles.csv` : 제품 정보
 
     <img src='./img/articles.png' width='400'>
 
 
 <br>
 
-- `customers.csv`
+- `customers.csv` : 고객 정보
 
     | 컬럼명                          | 의미(정확한 정의)            | 값 형태         |
     | ----------------------------  | --------------------- | ------------ |
@@ -143,7 +143,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 <br>
 
-- `transactions_train.csv`
+- `transactions_train.csv` : 거래 정보
 
     | 컬럼명                          | 구분     | 의미(정확한 정의)            | 값 형태         |
     | ---------------------------- | ------ | --------------------- | ------------ |
@@ -194,16 +194,13 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ---
 
-### 5.3 피처 엔지니어링 (Feature Engineering)
+### 5.3 최종 데이터 구조 
 
-### 5.4 최종 데이터 구조 
-전처리가 완료된 데이터는 분석 목적에 따라 두 가지 파일로 저장
-
-1.  **`total_churn.csv`**: 전체 고객을 대상으로 한 이탈 예측용 데이터
-2.  **`new_churn.csv`**: 신규 가입 고객의 초기 이탈 방지를 위한 예측용 데이터
+- X 데이터 : `['상품그룹', '멤버십상태', '연령대', '가격','패션뉴스구독여부']`
+- y 데이터 : `['전체고객이탈여부']` | `['신규고객이탈']`
 
 
-## 📊 EDA
+### 5.4 📊 EDA
 
 ### 1. 이탈률 분포
 
@@ -232,11 +229,29 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ## 6. 머신러닝 파이프라인 🔧
 
-### 6.4 모델
+### 6.1 모델
 
-#### 6.4.1 Model
+- XGBoost
+- LightGBM
+- GradientBoosting
 
+### 6.2 성능 비교 🖨️
 
+<img src='./img/model.png'>
+
+### 6.2.1 🤖 모델 선정 결과 (Model Selection)
+
+이탈 예측의 정확도와 실무 활용도를 고려하여 **신규 고객**과 **전체 고객** 모델 모두 **LightGBM**을 최종 모델로 선정하였습니다.
+
+### 1️⃣ 신규 고객 이탈 예측 모델: LightGBM 선정
+신규 고객군에서는 LightGBM이 타 알고리즘 대비 가장 압도적인 변별력을 보여주었습니다.
+
+* **성능 지표**:
+    * **ROC-AUC**: `0.74` (전체 모델 중 최상위 예측 변별력)
+    * **재현율(Recall)**: **`0.69`** (실제 이탈자를 찾아내는 능력 탁월)
+* **선정 이유**: 신규 고객은 이탈 징후를 빠르게 포착하는 것이 생존율에 직결됩니다. 본 모델은 높은 재현율을 바탕으로 **이탈 징후를 선제적으로 파악**하여 즉각적인 마케팅 액션을 취하기에 가장 적합한 모델로 판단되었습니다.
+
+<<<<<<< HEAD
 
 #### 7.1.1 성능 비교
 ## 🤖 모델 선정 결과 (Model Selection)
@@ -296,8 +311,29 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 > * **주의군 (0.5 ~ 0.8)**: 이탈 징후 분석 및 개인화된 마케팅 타겟팅.
 > * **안정군 (0.5 미만)**: 지속적인 서비스 만족도 유지 관리.
 ## 8. 인사이트 🔦
+=======
+---
+### 2️⃣ 전체 고객 이탈 예측 모델: LightGBM 선정
+데이터의 복잡도가 높은 전체 고객군에서도 LightGBM이 가장 안정적인 예측 성능을 유지했습니다.
 
-### 8.1 이용자 이탈 방지 전략
+* **성능 지표**:
+    * **F1-Score**: `0.47` (정밀도와 재현율의 최적 균형)
+    * **재현율(Recall)**: `0.45`
+* **선정 이유**: 전체 고객 데이터는 변수가 많아 모든 모델이 예측에 어려움을 겪었으나, LightGBM은 타 모델 대비 **가장 높은 F1-Score와 재현율**을 기록했습니다. 불균형 데이터에서도 상대적으로 일관된 성능을 도출하여 전체 고객 관리용 최종 모델로 선정하였습니다.
+
+---
+
+### 6.2.2 Faker 예측 결과
+>>>>>>> bbf9163 (docs: update readme.md)
+
+### 1. 주요 컬럼 설명
+<img src='./img/faker1.png' width=300>
+<img src='./img/faker.png'>
+
+| 컬럼명 | 설명 | 비고 |
+| :--- | :--- | :--- |
+| **LGBM_판단** | 모델이 내린 최종 예측 결론 | **유지** 또는 **이탈** |
+| **이탈확률** | 고객이 서비스를 그만둘 확률 (Softmax/Sigmoid 값) | 0.0 ~ 1.0 (0% ~ 100%) |
 
 ## 🎯 피처 기반 대응 전략 (Feature-based Strategies)
 
@@ -305,6 +341,41 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ---
 
+<<<<<<< HEAD
+=======
+### 2. 상세 해석 기준
+
+#### 🟢 유지 (Stay)
+* **정의**: 고객이 서비스를 계속 이용할 것으로 예측됨.
+* **기준**: `이탈확률`이 **0.5(50%) 미만**인 경우.
+* **예시**: 정준하(index 4) 님은 이탈확률이 **0.109(약 11%)**로 매우 낮아 '유지'로 판단되었습니다.
+
+#### 🔴 이탈 (Churn)
+* **정의**: 고객이 서비스를 그만둘 가능성이 높다고 예측됨.
+* **기준**: `이탈확률`이 **0.5(50%) 이상**인 경우.
+* **예시**: 조아름(index 1) 님은 이탈확률이 **0.777(약 78%)**로 매우 높기 때문에 모델이 '이탈'로 판단하였습니다.
+
+---
+
+### 3. 확률 기반의 의사결정 
+> **이탈확률** 수치를 통해 단순히 이탈 여부만 확인하는 것이 아니라, **위험도**에 따른 차별화된 대응이 가능합니다.
+> * **초고위험군 (0.8 이상)**: 즉각적인 프로모션이나 혜택 제공 필요.
+> * **주의군 (0.5 ~ 0.8)**: 이탈 징후 분석 및 개인화된 마케팅 타겟팅.
+> * **안정군 (0.5 미만)**: 지속적인 서비스 만족도 유지 관리.
+
+---
+
+## 7. 인사이트 🔦
+
+### 7.1 이용자 이탈 방지 전략
+
+### 🎯 피처 기반 대응 전략 (Feature-based Strategies)
+
+모델이 학습한 주요 피처(Feature)의 패턴을 분석하여, 이탈 방지를 위한 구체적인 비즈니스 액션 플랜을 수립합니다.
+
+---
+
+>>>>>>> bbf9163 (docs: update readme.md)
 ### 💰 1. 가격 (Price)
 > **핵심 가치**: 구매 금액과 직접 연결된 행동 지표로, 특히 **고가치(High-Value) 고객**의 이탈을 방지하는 핵심 데이터입니다.
 
@@ -329,8 +400,12 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ---
 
+<<<<<<< HEAD
 
 ## 9. 한계점 🧩
+=======
+## 8. 한계점 🧩
+>>>>>>> bbf9163 (docs: update readme.md)
 
 - 패션 즉 의류업은 개인적인 관점이 들어가며 브랜드별 혹은 트랜드에 민감하다는 특징이 있어서 해당 부분에 대한 전략이나 해결책 제시는 불가능합니다.
 - 각 브랜드의 구체적인 손익에 대한 프로모션은 고려가 불가능합니다.(10% 할인을 해도 몇 퍼센트 이상 판매한다면 이득이다 등)
@@ -338,7 +413,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 - 너무 많은 데이터 양 떄문에 메모리 부족으로 
 ---
 
-## 10. 수행 결과 페이지 📌
+## 9. 수행 결과 페이지 📌
 
 
 ### **팀원 한 줄 회고** 🧑‍💻
