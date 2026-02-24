@@ -251,67 +251,6 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
     * **재현율(Recall)**: **`0.69`** (실제 이탈자를 찾아내는 능력 탁월)
 * **선정 이유**: 신규 고객은 이탈 징후를 빠르게 포착하는 것이 생존율에 직결됩니다. 본 모델은 높은 재현율을 바탕으로 **이탈 징후를 선제적으로 파악**하여 즉각적인 마케팅 액션을 취하기에 가장 적합한 모델로 판단되었습니다.
 
-<<<<<<< HEAD
-
-#### 7.1.1 성능 비교
-## 🤖 모델 선정 결과 (Model Selection)
-
-이탈 예측의 정확도와 실무 활용도를 고려하여 **신규 고객**과 **전체 고객** 모델 모두 **LightGBM**을 최종 모델로 선정하였습니다.
-
-### 1️⃣ 신규 고객 이탈 예측 모델: LightGBM 선정
-신규 고객군에서는 LightGBM이 타 알고리즘 대비 가장 압도적인 변별력을 보여주었습니다.
-
-* **성능 지표**:
-    * **ROC-AUC**: `0.74` (전체 모델 중 최상위 예측 변별력)
-    * **재현율(Recall)**: **`0.69`** (실제 이탈자를 찾아내는 능력 탁월)
-* **선정 이유**: 신규 고객은 이탈 징후를 빠르게 포착하는 것이 생존율에 직결됩니다. 본 모델은 높은 재현율을 바탕으로 **이탈 징후를 선제적으로 파악**하여 즉각적인 마케팅 액션을 취하기에 가장 적합한 모델로 판단되었습니다.
-
----
-
-### 2️⃣ 전체 고객 이탈 예측 모델: LightGBM 선정
-데이터의 복잡도가 높은 전체 고객군에서도 LightGBM이 가장 안정적인 예측 성능을 유지했습니다.
-
-* **성능 지표**:
-    * **F1-Score**: `0.47` (정밀도와 재현율의 최적 균형)
-    * **재현율(Recall)**: `0.45`
-* **선정 이유**: 전체 고객 데이터는 변수가 많아 모든 모델이 예측에 어려움을 겪었으나, LightGBM은 타 모델 대비 **가장 높은 F1-Score와 재현율**을 기록했습니다. 불균형 데이터에서도 상대적으로 일관된 성능을 도출하여 전체 고객 관리용 최종 모델로 선정하였습니다.
-
----
-
-#### 7.1.2 Faker 예측 결과
-
-### 1. 주요 컬럼 설명
-![image.png](attachment:df9e1e5b-2531-4cf6-b17e-be4427bb8ca5:image.png)
-![image.png](attachment:3baa26e8-a6c7-4cb4-a3c5-57473a4f2db7:image.png)
-
-| 컬럼명 | 설명 | 비고 |
-| :--- | :--- | :--- |
-| **LGBM_판단** | 모델이 내린 최종 예측 결론 | **유지** 또는 **이탈** |
-| **이탈확률** | 고객이 서비스를 그만둘 확률 (Softmax/Sigmoid 값) | 0.0 ~ 1.0 (0% ~ 100%) |
-
----
-
-### 2. 상세 해석 기준
-
-#### 🟢 유지 (Stay)
-* **정의**: 고객이 서비스를 계속 이용할 것으로 예측됨.
-* **기준**: `이탈확률`이 **0.5(50%) 미만**인 경우.
-* **예시**: 정준하(index 4) 님은 이탈확률이 **0.109(약 11%)**로 매우 낮아 '유지'로 판단되었습니다.
-
-#### 🔴 이탈 (Churn)
-* **정의**: 고객이 서비스를 그만둘 가능성이 높다고 예측됨.
-* **기준**: `이탈확률`이 **0.5(50%) 이상**인 경우.
-* **예시**: 조아름(index 1) 님은 이탈확률이 **0.777(약 78%)**로 매우 높기 때문에 모델이 '이탈'로 판단하였습니다.
-
----
-
-### 3. 확률 기반의 의사결정 
-> **이탈확률** 수치를 통해 단순히 이탈 여부만 확인하는 것이 아니라, **위험도**에 따른 차별화된 대응이 가능합니다.
-> * **초고위험군 (0.8 이상)**: 즉각적인 프로모션이나 혜택 제공 필요.
-> * **주의군 (0.5 ~ 0.8)**: 이탈 징후 분석 및 개인화된 마케팅 타겟팅.
-> * **안정군 (0.5 미만)**: 지속적인 서비스 만족도 유지 관리.
-## 8. 인사이트 🔦
-=======
 ---
 ### 2️⃣ 전체 고객 이탈 예측 모델: LightGBM 선정
 데이터의 복잡도가 높은 전체 고객군에서도 LightGBM이 가장 안정적인 예측 성능을 유지했습니다.
@@ -324,7 +263,6 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 ---
 
 ### 6.2.2 Faker 예측 결과
->>>>>>> bbf9163 (docs: update readme.md)
 
 ### 1. 주요 컬럼 설명
 <img src='./img/faker1.png' width=300>
@@ -335,14 +273,8 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 | **LGBM_판단** | 모델이 내린 최종 예측 결론 | **유지** 또는 **이탈** |
 | **이탈확률** | 고객이 서비스를 그만둘 확률 (Softmax/Sigmoid 값) | 0.0 ~ 1.0 (0% ~ 100%) |
 
-## 🎯 피처 기반 대응 전략 (Feature-based Strategies)
-
-모델이 학습한 주요 피처(Feature)의 패턴을 분석하여, 이탈 방지를 위한 구체적인 비즈니스 액션 플랜을 수립합니다.
-
 ---
 
-<<<<<<< HEAD
-=======
 ### 2. 상세 해석 기준
 
 #### 🟢 유지 (Stay)
@@ -375,7 +307,6 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ---
 
->>>>>>> bbf9163 (docs: update readme.md)
 ### 💰 1. 가격 (Price)
 > **핵심 가치**: 구매 금액과 직접 연결된 행동 지표로, 특히 **고가치(High-Value) 고객**의 이탈을 방지하는 핵심 데이터입니다.
 
@@ -400,12 +331,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ---
 
-<<<<<<< HEAD
-
-## 9. 한계점 🧩
-=======
 ## 8. 한계점 🧩
->>>>>>> bbf9163 (docs: update readme.md)
 
 - 패션 즉 의류업은 개인적인 관점이 들어가며 브랜드별 혹은 트랜드에 민감하다는 특징이 있어서 해당 부분에 대한 전략이나 해결책 제시는 불가능합니다.
 - 각 브랜드의 구체적인 손익에 대한 프로모션은 고려가 불가능합니다.(10% 할인을 해도 몇 퍼센트 이상 판매한다면 이득이다 등)
@@ -437,12 +363,4 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 #### 논문
 - https://uark.pressbooks.pub/ampdglobalsourcing/chapter/10-3-the-importance-of-data-analytics-in-modern-fashion-industry
 - [비계약 서비스 산업의 효율적인 이탈예측 모형의 개발](https://dspace.hansung.ac.kr/handle/2024.oak/9834)
-<<<<<<< HEAD
 - [인공지능 기반 고객 이탈 예측 기술 동향 및 발전방향](http://journal.dcs.or.kr/xml/37355/37355.pdf)
-
-#### 기타
-- [데이터 분석가 Seongbin이 말하는 RFM 정의](https://www.fanruan.com/ko-kr/blog/rfm)
-- [스토어 성장 전략 전문 미디어 및 팟캐스트](https://ecommercefastlane.com/ko/what-is-customer-churn-3-effective-strategies-to-reduce-it)
-=======
-- [인공지능 기반 고객 이탈 예측 기술 동향 및 발전방향](http://journal.dcs.or.kr/xml/37355/37355.pdf)
->>>>>>> a59e725 (docs: update readme.md)
