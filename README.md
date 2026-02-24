@@ -60,7 +60,7 @@
 - 따라서 본 프로젝트는
     - 패션 산업 환경에서 발생하는 고객 이탈 정의
     - 고객 구매 데이터를 기반으로 이탈 분류 
-    - 이탈 예측 모델을 통해 선제적 CRM 전략 수립 가능성 탐색
+    - 이탈 예측 모델을 통해 이탈 방지 전략 수립 가능성 탐색
   
   이를 목적으로 하여 단순히 이탈 여부를 예측하는 데 그치지 않고, 이탈 고객의 패턴과 원인을 설명하는 데 초점을 둡니다.
   
@@ -98,21 +98,7 @@
 <**출처**>
 https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations/data
 
----
 
-### 4.2 이탈 정의
-
-### 4.2.1 계약 고객과 비계약 고객
-- **계약 고객** : 서비스 이용을 위해 명시적 계약을 체결한 고객
-- **비계약 고객** : 상품을 구매하기로 결정하면, 계약의 필요성 없이 최소한의 등록만으로 거래를 하는 고객
-
-    | 구분       | 계약 설정     | 비계약 설정          |
-    | -------- | --------- | --------------- |
-    | 계약 존재 여부 | 있음        | 없음              |
-    | 이탈 기준    | 계약 해지     | 일정 기간 비활성       |
-    | 정의 난이도   | 비교적 명확    | 도메인별 정의 필요      |
-    | 주요 변수    | 해지일, 약정기간 | 마지막 활동일, 재구매 주기 |
-    | 적용 산업 예시|통신, 은행, 보험 등| 이커머스, 온라인 게임 등|
 
 
 ---
@@ -173,15 +159,30 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 | **fashion_news_frequency** | `fillna('UNKNOWN')` | 뉴스레터 수신 빈도 정보 없음 고객 분류 |
 | **age** | `pd.cut` | 10대~60대 이상 구간화, 결측치는 `UNKNOWN` 처리 |
 
-### 🔹주요 변수
-1) **이탈 파생 변수**
+### 5.3 이탈 정의
+
+### 5.3.1 계약 고객과 비계약 고객
+- **계약 고객** : 서비스 이용을 위해 명시적 계약을 체결한 고객
+- **비계약 고객** : 상품을 구매하기로 결정하면, 계약의 필요성 없이 최소한의 등록만으로 거래를 하는 고객
+
+    | 구분       | 계약 설정     | 비계약 설정          |
+    | -------- | --------- | --------------- |
+    | 계약 존재 여부 | 있음        | 없음              |
+    | 이탈 기준    | 계약 해지     | 일정 기간 비활성       |
+    | 정의 난이도   | 비교적 명확    | 도메인별 정의 필요      |
+    | 주요 변수    | 해지일, 약정기간 | 마지막 활동일, 재구매 주기 |
+    | 적용 산업 예시|통신, 은행, 보험 등| 이커머스, 온라인 게임 등|
+
+### 5.3.2 이탈 변수
 - 고객별 **상대적 구매 주기**를 고려한 **API(Average Purchase Interval)** 방식을 채택
 
     - `API(AveragePurchasing Interval)` : 개인 고객별 구매주기의 평균
     - `LPL(LastPurchasing Lapse)` : 최종구매경과 
 
     - <img src='./img//api_img.png' width='400'>
+
     - $$LPL = \text{Dataset Max Date} - \text{Customer's Last Purchase Date}$$
+
     - $$Churn =\begin{cases}1 & \text{if } API < LPL \\0 & \text{otherwise}\end{cases}$$
 
     | 지표명 | 산출 로직 | 분석적 의미 |
@@ -189,18 +190,18 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
     | **API ratio** | `gap 합계` / (`거래일수` - 1) | 고객별 **평균 구매 주기** (구매 간격의 평균) |
     | **LPL** | `last_date` - `최종 구매 시점` | 고객별 최종 구매 시점부터 데이터의 마지막 날짜까지 경과한 기간|
     | **이탈여부(churn)** | `API ratio < LPL` | LPL 값이 API 값보다 큰 경우 이탈로 정의 |
-    | **신규고객이탈** | `구매 횟수 == 1` | 첫 구매 이후 추가 구매가 없는 일회성 고객 |
-    | **전체고객이탈여부** | `churn + only_first_tran` | 주기적 이탈자와 일회성 고객을 통합한 최종 라벨 |
-
+    
+    - **신규고객이탈** : 거래 횟수가 정확히 1회인 고객의 이탈 여부 (이탈:1/비이탈:0)
+    - **전체고객이탈** : 모든 고객의 이탈 여부
 ---
 
-### 5.3 최종 데이터 구조 
+### 5.4 최종 데이터 구조 
 
 - X 데이터 : `['상품그룹', '멤버십상태', '연령대', '가격','패션뉴스구독여부']`
 - y 데이터 : `['전체고객이탈여부']` | `['신규고객이탈']`
 
 
-### 5.4 📊 EDA
+### 5.5 📊 EDA
 
 ### 1. 이탈률 분포
 
@@ -221,8 +222,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ### 2. 상관관계 분석
 
----
-
+<img src='./img/eda_sang.png'>
 
 
 ---
@@ -242,6 +242,9 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 ### 6.2.1 🤖 모델 선정 결과 (Model Selection)
 
 이탈 예측의 정확도와 실무 활용도를 고려하여 **신규 고객**과 **전체 고객** 모델 모두 **LightGBM**을 최종 모델로 선정하였습니다.
+
+<img src='./img/model/신규고객이탈 ROC.png' width=400>
+<img src='./img/model/전체고객이탈 ROC.png' width=400>
 
 ### 1️⃣ 신규 고객 이탈 예측 모델: LightGBM 선정
 신규 고객군에서는 LightGBM이 타 알고리즘 대비 가장 압도적인 변별력을 보여주었습니다.
@@ -265,8 +268,8 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 ### 6.2.2 Faker 예측 결과
 
 ### 1. 주요 컬럼 설명
-<img src='./img/faker1.png' width=300>
-<img src='./img/faker.png'>
+<img src='./img/faker1.png' width=500>
+<img src='./img/faker.png' width=500>
 
 | 컬럼명 | 설명 | 비고 |
 | :--- | :--- | :--- |
@@ -301,11 +304,9 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 
 ### 7.1 이용자 이탈 방지 전략
 
-### 🎯 피처 기반 대응 전략 (Feature-based Strategies)
 
-모델이 학습한 주요 피처(Feature)의 패턴을 분석하여, 이탈 방지를 위한 구체적인 비즈니스 액션 플랜을 수립합니다.
-
----
+<img src='./img/model/신규고객이탈_feature importances bar graph.png' width=400>
+<img src='./img/model/전체고객이탈_feature importances bar graph.png' width=400>
 
 ### 💰 1. 가격 (Price)
 > **핵심 가치**: 구매 금액과 직접 연결된 행동 지표로, 특히 **고가치(High-Value) 고객**의 이탈을 방지하는 핵심 데이터입니다.
@@ -336,7 +337,7 @@ https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations
 - 패션 즉 의류업은 개인적인 관점이 들어가며 브랜드별 혹은 트랜드에 민감하다는 특징이 있어서 해당 부분에 대한 전략이나 해결책 제시는 불가능합니다.
 - 각 브랜드의 구체적인 손익에 대한 프로모션은 고려가 불가능합니다.(10% 할인을 해도 몇 퍼센트 이상 판매한다면 이득이다 등)
 - 또한 설문·리뷰 등 정성 데이터가 부족해, 정량 분석만으로는 고객의 ‘왜 떠나는지(WHY)’를 완전히 설명하기 어렵다는 한계가 있습니다
-- 너무 많은 데이터 양 떄문에 메모리 부족으로 
+- 약 3,000만 건의 방대한 데이터로 인해 메모리 부족 및 학습 시간 지연 이슈가 지속적으로 발생하였고, 연산 효율을 위해 10%만 샘플링했음에도 여전히 학습 시간이 과도하여, 현실적으로 정밀한 하이퍼파라미터 최적화 수행이 불가했음.
 ---
 
 ## 9. 수행 결과 페이지 📌
